@@ -86,7 +86,6 @@
 
 .loading {
   margin-top: 35px;
-  margin-left: 195px;
   animation: dim-brighten 2s ease-in-out infinite;
 }
 

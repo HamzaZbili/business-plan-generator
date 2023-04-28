@@ -23,6 +23,7 @@ export default function Home() {
         body: JSON.stringify({
           capital: capitalInput,
           description: descriptionInput,
+          steps: steps,
         }),
       });
       setIsLoading(false);
