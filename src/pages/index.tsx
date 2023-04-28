@@ -91,7 +91,6 @@ export default function Home() {
           <input type="submit" value="Generate business plan" />
         </form>
         {isLoading && <div className={styles.loading}>creating plan</div>}
-
         <div
           className={styles.result}
           dangerouslySetInnerHTML={{
