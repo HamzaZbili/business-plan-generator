@@ -2,7 +2,7 @@ import { Configuration, OpenAIApi, CreateCompletionRequest } from "openai";
 import { NextApiRequest, NextApiResponse } from "next";
 
 interface BusinessPlanRequestBody {
-  capital: number;
+  capital: string;
   description: string;
   steps: string;
 }
@@ -74,7 +74,7 @@ export default async function generateBusinessPlan(
 }
 
 function generatePrompt(
-  capital: number,
+  capital: string,
   description: string,
   steps: string
 ): string {
