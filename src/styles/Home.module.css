@@ -23,6 +23,9 @@
 .main {
   width: 100vw;
   padding: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .main .icon {
   width: 34px;
