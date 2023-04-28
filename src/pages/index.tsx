@@ -36,7 +36,7 @@ export default function Home() {
       }
 
       setResult(data.result);
-      console.log(result);
+      // console.log(result);
       setCapitalInput(0);
       setDescriptionInput("");
     } catch (error: any) {

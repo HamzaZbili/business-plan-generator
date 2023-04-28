@@ -46,6 +46,15 @@ export default async function generateBusinessPlan(
     return;
   }
 
+  if (steps.trim().length === 0) {
+    res.status(400).json({
+      error: {
+        message: "Please enter steps taken",
+      },
+    });
+    return;
+  }
+
   try {
     const completionRequest: CreateCompletionRequest = {
       model: "text-davinci-003",
@@ -80,5 +89,6 @@ function generatePrompt(
 ): string {
   return `Please provide a business plan with the following description: ${description}.
   The amount of capital I currently have in Euros is ${capital}.
-  The steps I have already taken are as follows:${steps}`;
+  The steps I have already taken are as follows:${steps}.
+  Pleaes do not finish my sentence. Only write the business plan `;
 }
