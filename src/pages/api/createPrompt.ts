@@ -5,7 +5,6 @@ interface BusinessPlanRequestBody {
   capital: string;
   description: string;
   steps: string;
-  wildCard: string;
 }
 
 const configuration = new Configuration({
@@ -26,8 +25,7 @@ export default async function generateBusinessPlan(
     return;
   }
 
-  const { capital, description, steps, wildCard }: BusinessPlanRequestBody =
-    req.body;
+  const { capital, description, steps }: BusinessPlanRequestBody = req.body;
 
   if (!capital) {
     res.status(400).json({
@@ -56,24 +54,16 @@ export default async function generateBusinessPlan(
     return;
   }
 
-  if (wildCard.trim().length === 0) {
-    res.status(400).json({
-      error: {
-        message: "Please complete form",
-      },
-    });
-    return;
-  }
-
   try {
     const completionRequest: CreateCompletionRequest = {
       model: "text-davinci-003",
-      prompt: generatePrompt(capital, description, steps, wildCard),
+      prompt: generatePrompt(capital, description, steps),
       // 1 = Highly creative and diverse, but potentially less coherent
       temperature: 0.7,
       max_tokens: 4000,
     };
     const completion = await openai.createCompletion(completionRequest);
+    console.log(completion.data.choices[0].text);
     res.status(200).json({ result: completion.data.choices[0].text });
   } catch (error: any) {
     // Consider adjusting the error handling logic for your use case
@@ -94,13 +84,12 @@ export default async function generateBusinessPlan(
 function generatePrompt(
   capital: string,
   description: string,
-  steps: string,
-  wildCard: string
+  steps: string
 ): string {
-  return `Create a business plan:
+  return `You are a business advisor. This is what your client has provided you with:
   ${description}.
-  I have ${capital} euro in capital.
+  The amount of capital I currently have in Euros is ${capital}.
   ${steps}.
-  ${wildCard}.
-  Pleaes do not finish my sentence. Only write the business plan `;
+  - Ask them a single RELEVANT question, which requires a long answer, that can assist you the advisor.
+  `;
 }

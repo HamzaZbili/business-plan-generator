@@ -75,17 +75,25 @@
   padding: 5px;
 }
 
-.description {
+.descriptionInput {
   width: 100%;
   height: 150px;
+  padding: 10px;
 }
-.steps {
+
+.capitalInput {
+  padding: 5px;
+}
+
+.stepsInput {
   width: 100%;
   height: 100px;
+  padding: 10px;
 }
 
 .loading {
   margin-top: 35px;
+  align-self: center;
   animation: dim-brighten 2s ease-in-out infinite;
 }
 
