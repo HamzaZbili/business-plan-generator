@@ -57,13 +57,12 @@ export default async function generateBusinessPlan(
   try {
     const completionRequest: CreateCompletionRequest = {
       model: "text-davinci-003",
-      prompt: generatePrompt(capital, description, steps),
+      prompt: generateQuestion(capital, description, steps),
       // 1 = Highly creative and diverse, but potentially less coherent
       temperature: 0.7,
       max_tokens: 4000,
     };
     const completion = await openai.createCompletion(completionRequest);
-    console.log(completion.data.choices[0].text);
     res.status(200).json({ result: completion.data.choices[0].text });
   } catch (error: any) {
     // Consider adjusting the error handling logic for your use case
@@ -81,7 +80,7 @@ export default async function generateBusinessPlan(
   }
 }
 
-function generatePrompt(
+function generateQuestion(
   capital: string,
   description: string,
   steps: string

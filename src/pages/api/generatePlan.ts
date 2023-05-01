@@ -13,7 +13,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-export default async function generateBusinessPlan(
+export default async function generatePlan(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> {
@@ -68,7 +68,7 @@ export default async function generateBusinessPlan(
   try {
     const completionRequest: CreateCompletionRequest = {
       model: "text-davinci-003",
-      prompt: generatePrompt(capital, description, steps, wildCard),
+      prompt: fetchPlan(capital, description, steps, wildCard),
       // 1 = Highly creative and diverse, but potentially less coherent
       temperature: 0.7,
       max_tokens: 4000,
@@ -91,7 +91,7 @@ export default async function generateBusinessPlan(
   }
 }
 
-function generatePrompt(
+function fetchPlan(
   capital: string,
   description: string,
   steps: string,
