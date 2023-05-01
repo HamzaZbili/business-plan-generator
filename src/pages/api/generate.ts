@@ -64,7 +64,6 @@ export default async function generateBusinessPlan(
       max_tokens: 4000,
     };
     const completion = await openai.createCompletion(completionRequest);
-    console.log(completion.data.choices[0].text);
     res.status(200).json({ result: completion.data.choices[0].text });
   } catch (error: any) {
     // Consider adjusting the error handling logic for your use case
