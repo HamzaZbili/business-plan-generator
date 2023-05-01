@@ -69,7 +69,6 @@ export default async function generateBusinessPlan(
   } catch (error: any) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {
-      console.error(error.response.status, error.response.data);
       res.status(error.response.status).json(error.response.data);
     } else {
       console.error(`Error with OpenAI API request: ${error.message}`);
