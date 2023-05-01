@@ -65,16 +65,37 @@ export default async function generatePlan(
     return;
   }
 
+  const GPTmessage = [
+    { role: "system", content: `You are a business advisor.` },
+    {
+      role: "user",
+      content: buildPrompt(capital, description, steps, wildCard),
+    },
+    {
+      role: "assistant",
+      content: `Create a business plan. The business will be based in France`,
+    },
+  ];
+
   try {
-    const completionRequest: CreateCompletionRequest = {
-      model: "text-davinci-003",
-      prompt: fetchPlan(capital, description, steps, wildCard),
-      // 1 = Highly creative and diverse, but potentially less coherent
-      temperature: 0.7,
-      max_tokens: 4000,
+    let GPT35Turbo = async (message: any) => {
+      const response = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: message,
+        temperature: 0.7,
+      });
+      if (!response.data.choices[0].message) {
+        res.status(400).json({
+          error: {
+            message: "no response from GPT35Turbo",
+          },
+        });
+        return;
+      }
+      return response.data.choices[0].message.content;
     };
-    const completion = await openai.createCompletion(completionRequest);
-    res.status(200).json({ result: completion.data.choices[0].text });
+    const response = await GPT35Turbo(GPTmessage);
+    res.status(200).json(response);
   } catch (error: any) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {
@@ -91,7 +112,7 @@ export default async function generatePlan(
   }
 }
 
-function fetchPlan(
+function buildPrompt(
   capital: string,
   description: string,
   steps: string,
@@ -100,7 +121,6 @@ function fetchPlan(
   return `Create a business plan:
   ${description}.
   I have ${capital} euro in capital.
-  ${steps}.
-  ${wildCard}.
-  Pleaes do not finish my sentence. Only write the business plan `;
+  I have taken these steps: ${steps}.
+  ${wildCard}`;
 }

@@ -54,16 +54,38 @@ export default async function generateBusinessPlan(
     return;
   }
 
+  const GPTmessage = [
+    { role: "system", content: `You are a business advisor.` },
+    {
+      role: "user",
+      content: buildPrompt(capital, description, steps),
+    },
+    {
+      role: "assistant",
+      content: `Ask me a single relevant question which requires a long answer
+        and that can assist you the advisor.`,
+    },
+  ];
+
   try {
-    const completionRequest: CreateCompletionRequest = {
-      model: "text-davinci-003",
-      prompt: generateQuestion(capital, description, steps),
-      // 1 = Highly creative and diverse, but potentially less coherent
-      temperature: 0.7,
-      max_tokens: 4000,
+    let GPT35Turbo = async (message: any) => {
+      const response = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: message,
+        temperature: 0.7,
+      });
+      if (!response.data.choices[0].message) {
+        res.status(400).json({
+          error: {
+            message: "no response from GPT35Turbo",
+          },
+        });
+        return;
+      }
+      return response.data.choices[0].message.content;
     };
-    const completion = await openai.createCompletion(completionRequest);
-    res.status(200).json({ result: completion.data.choices[0].text });
+    const response = await GPT35Turbo(GPTmessage);
+    res.status(200).json(response);
   } catch (error: any) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {
@@ -80,15 +102,12 @@ export default async function generateBusinessPlan(
   }
 }
 
-function generateQuestion(
+function buildPrompt(
   capital: string,
   description: string,
   steps: string
 ): string {
-  return `You are a business advisor. This is what your client has provided you with:
-  ${description}.
-  The amount of capital I currently have in Euros is ${capital}.
-  ${steps}.
-  - Ask them a single RELEVANT question, which requires a long answer, that can assist you the advisor.
-  `;
+  return `${description}.
+  I have ${capital} euros.
+  I have taken these steps: ${steps}.`;
 }

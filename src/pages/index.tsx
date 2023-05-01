@@ -38,7 +38,7 @@ export default function Home() {
         );
       }
 
-      setPrompt(data.result);
+      setPrompt(data);
       setIsPromptGenerated(true);
     } catch (error: any) {
       console.error(error);
@@ -71,7 +71,7 @@ export default function Home() {
         );
       }
       setIsLoading(false);
-      setPlan(data.result);
+      setPlan(data);
       setCapitalInput("");
       setDescriptionInput("");
       setSteps("");
